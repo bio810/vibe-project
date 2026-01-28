@@ -1,0 +1,7 @@
+.local/
+.cache/
+venv/
+.gradle/
+build/
+*.pyc
+__pycache__/

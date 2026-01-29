@@ -18,7 +18,7 @@ android {
     signingConfigs {
         release {
             storeFile file("../my-release-key.jks")
-            // ⚠️ 記得這裡要換成你自己的金鑰密碼
+            // ⚠️ 確保這裡是你的金鑰密碼
             storePassword "your_password"
             keyAlias "my-key-alias"
             keyPassword "your_password"
@@ -31,6 +31,15 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+
+    // 核心修復：對齊 Java 版本為 17
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
     }
 }
 

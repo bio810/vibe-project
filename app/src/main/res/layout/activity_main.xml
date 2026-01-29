@@ -2,23 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212"
+    android:background="#000000"
     android:gravity="center"
     android:orientation="vertical">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Vibe Project"
-        android:textColor="#00FF00"
-        android:textSize="32sp"
+        android:text="VIBE PROJECT"
+        android:textColor="#FF0000"
+        android:textSize="36sp"
         android:textStyle="bold" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="啟動畫面成功！"
+        android:text="UI 已成功載入！"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="16dp" />
 </LinearLayout>

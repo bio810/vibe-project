@@ -17,11 +17,12 @@ android {
 
     signingConfigs {
         release {
+            // 指向根目錄的金鑰檔案
             storeFile file("../my-release-key.jks")
-            // ⚠️ 確保這裡是你的金鑰密碼
-            storePassword "your_password"
+            // ⚠️ 重點：請將下方兩處換成你當初建立 .jks 時設定的密碼
+            storePassword "你的正確密碼"
             keyAlias "my-key-alias"
-            keyPassword "your_password"
+            keyPassword "你的正確密碼"
         }
     }
 
@@ -33,7 +34,6 @@ android {
         }
     }
 
-    // 核心修復：對齊 Java 版本為 17
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17

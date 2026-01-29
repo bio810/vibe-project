@@ -2,23 +2,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:background="#121212"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="20dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="VIBE PROJECT"
         android:textColor="#FF0000"
-        android:textSize="36sp"
+        android:textSize="32sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/btnScan"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="UI 已成功載入！"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="30dp"
+        android:text="開始搜尋藍牙裝置"
+        android:backgroundTint="#00FF00"
+        android:textColor="#000000" />
+
+    <ListView
+        android:id="@+id/deviceList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="20dp"
+        android:background="#1E1E1E" />
 </LinearLayout>

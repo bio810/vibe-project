@@ -17,9 +17,8 @@ android {
 
     signingConfigs {
         release {
-            // 指向根目錄的金鑰檔案
             storeFile file("../my-release-key.jks")
-            // ⚠️ 重點：請將下方兩處換成你當初建立 .jks 時設定的密碼
+            // ⚠️ 重點：請確保下方兩個密碼與你建立金鑰時一致
             storePassword "你的正確密碼"
             keyAlias "my-key-alias"
             keyPassword "你的正確密碼"

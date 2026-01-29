@@ -26,33 +26,30 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // 初始化藍牙適配器
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         bluetoothAdapter = bluetoothManager.adapter
 
         val btnScan = findViewById<Button>(R.id.btnScan)
         val listView = findViewById<ListView>(R.id.deviceList)
 
-        // 設定清單顯示器
         listAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, deviceList)
         listView.adapter = listAdapter
 
-        // 按鈕點擊事件
         btnScan.setOnClickListener {
             if (bluetoothAdapter == null) {
-                Toast.makeText(this, "此裝置不支援藍牙", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "錯誤：此手機不支援藍牙", Toast.LENGTH_LONG).show()
+            } else if (!bluetoothAdapter!!.isEnabled) {
+                Toast.makeText(this, "請先開啟手機藍牙功能！", Toast.LENGTH_LONG).show()
             } else {
                 checkPermissionsAndScan()
             }
         }
 
-        // 註冊廣播接收器來監聽搜尋到的裝置
         val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
         registerReceiver(receiver, filter)
     }
 
     private fun checkPermissionsAndScan() {
-        // 檢查 Android 12+ 必備的藍牙掃描權限
         val permissions = arrayOf(
             Manifest.permission.BLUETOOTH_SCAN,
             Manifest.permission.BLUETOOTH_CONNECT,
@@ -64,6 +61,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (missingPermissions.isNotEmpty()) {
+            Toast.makeText(this, "正在請求權限...", Toast.LENGTH_SHORT).show()
             ActivityCompat.requestPermissions(this, missingPermissions.toTypedArray(), 1)
         } else {
             startScanning()
@@ -72,28 +70,37 @@ class MainActivity : AppCompatActivity() {
 
     private fun startScanning() {
         deviceList.clear()
+        deviceList.add("正在搜尋中，請稍候...") // 先放一行字確認清單有動
         listAdapter.notifyDataSetChanged()
         
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
-            bluetoothAdapter?.startDiscovery()
-            Toast.makeText(this, "正在搜尋附近的裝置...", Toast.LENGTH_SHORT).show()
+            val started = bluetoothAdapter?.startDiscovery()
+            if (started == true) {
+                Toast.makeText(this, "掃描已啟動，請確保周圍有可偵測裝置", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "掃描啟動失敗，請重試", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    // 接收搜尋結果的廣播
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val action: String? = intent.action
             if (BluetoothDevice.ACTION_FOUND == action) {
+                // 如果找到第一個裝置，就把「正在搜尋中」那行刪掉
+                if (deviceList.contains("正在搜尋中，請稍候...")) {
+                    deviceList.remove("正在搜尋中，請稍候...")
+                }
+
                 val device: BluetoothDevice? = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
                 val deviceName = if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
                     device?.name ?: "未知名稱"
                 } else {
-                    "缺少權限"
+                    "缺少連線權限"
                 }
                 val deviceAddress = device?.address
                 
-                val info = "$deviceName\n$deviceAddress"
+                val info = "$deviceName ($deviceAddress)"
                 if (!deviceList.contains(info)) {
                     deviceList.add(info)
                     listAdapter.notifyDataSetChanged()

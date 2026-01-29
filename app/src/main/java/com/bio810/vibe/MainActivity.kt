@@ -6,7 +6,6 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.*
 import android.content.pm.PackageManager
-import android.location.LocationManager
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -30,35 +29,36 @@ class MainActivity : AppCompatActivity() {
         findViewById<ListView>(R.id.deviceList).adapter = listAdapter
 
         findViewById<Button>(R.id.btnScan).setOnClickListener {
-            startAdvancedScan()
+            startNoGpsScan()
         }
 
         registerReceiver(receiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
     }
 
-    private fun startAdvancedScan() {
-        val lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val gpsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        
-        if (!gpsEnabled) {
-            tvStatus.text = "狀態：請開啟手機 GPS 定位！"
-            Toast.makeText(this, "藍牙掃描需要開啟定位", Toast.LENGTH_LONG).show()
+    private fun startNoGpsScan() {
+        if (bluetoothAdapter == null) {
+            tvStatus.text = "狀態：此裝置不支援藍牙"
             return
         }
 
+        // 只請求藍牙相關權限，排除定位請求
         val permissions = arrayOf(
             Manifest.permission.BLUETOOTH_SCAN,
-            Manifest.permission.BLUETOOTH_CONNECT,
-            Manifest.permission.ACCESS_FINE_LOCATION
+            Manifest.permission.BLUETOOTH_CONNECT
         )
 
         if (permissions.any { ActivityCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED }) {
-            tvStatus.text = "狀態：正在請求權限..."
+            tvStatus.text = "狀態：正在請求藍牙權限..."
             ActivityCompat.requestPermissions(this, permissions, 1)
         } else {
+            if (!bluetoothAdapter!!.isEnabled) {
+                tvStatus.text = "狀態：請開啟藍牙開關"
+                return
+            }
             deviceList.clear()
+            listAdapter.notifyDataSetChanged()
             bluetoothAdapter?.startDiscovery()
-            tvStatus.text = "狀態：正在掃描..."
+            tvStatus.text = "狀態：正在搜尋藍牙裝置 (無視 GPS)"
         }
     }
 
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
                 if (!deviceList.contains(info)) {
                     deviceList.add(info)
                     listAdapter.notifyDataSetChanged()
-                    tvStatus.text = "狀態：已找到 ${deviceList.size} 個裝置"
+                    tvStatus.text = "狀態：找到 ${deviceList.size} 個裝置"
                 }
             }
         }

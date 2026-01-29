@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212">
+    android:background="#121212"
+    android:gravity="center"
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Vibe Project: 藍牙遠端啟動成功"
+        android:text="Vibe Project"
+        android:textColor="#00FF00"
+        android:textSize="32sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="啟動畫面成功！"
         android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:layout_centerInParent="true" />
-</RelativeLayout>
+        android:textSize="18sp"
+        android:layout_marginTop="20dp" />
+</LinearLayout>
